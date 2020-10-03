@@ -1,0 +1,64 @@
+url <- 'https://raw.githubusercontent.com/JayRay1987/MLwR/master/Machine%20Learning%20with%20R%20(3rd%20Ed.)/Chapter07/letterdata.csv'
+letters <- read.csv(url)
+#structure of data set
+str(letters)
+#create training and test data sets
+letters_train <- letters[1:16000,]
+letters_test <- letters[16001:20000,]
+install.packages("kernlab")
+library(kernlab)
+#baseline model with linear kernal.
+letter_classifier <- ksvm(letter ~., data = letters_train, kernel= "vanilladot")
+letter_classifier
+#test our predictions
+letter_predictions <- predict(letter_classifier, letters_test)
+#check first few predictions
+head(letter_predictions)
+#check the predictions
+table(letter_predictions, letters_test$letter)
+#check how many true and false
+agreement <- letter_predictions == letters_test$letter
+table(agreement)
+#check the accuracy
+prop.table(table(agreement))
+#our accuracy is 83%, which is quite good.
+#improve our model with Gaussian RBF kernal.
+letter_classifier_rbf <- ksvm(letter ~ ., data = letters_train, kernel = "rbfdot")
+#make our predictions
+letter_predictions_rbf <- predict(letter_classifier_rbf, letters_test)
+#check the accuracy using Gaussian RBF kernal. Accuracy of 93%.
+agreement_rbf <- letter_predictions_rbf == letters_test$letter
+table(agreement_rbf)
+prop.table(table(agreement_rbf))
+#let's try with a different kernel. Let's try ploydot, ploynomial kernel.
+letter_classifier_polydot <- ksvm(letter ~., data = letters_train, kernel = "polydot")
+#make our predictions
+letter_predictions_polydot <- predict(letter_classifier_polydot, letters_test)
+#check the accuracy using polydot. Accuracy of 84%.
+agreement_polydot <- letter_predictions_polydot == letters_test$letter
+table(agreement_polydot)
+prop.table(table(agreement_polydot))
+#let's try with a different kernel. Let's try tanhdot. Hyperbolic tangent kernel.
+letter_classifier_tanhdot <- ksvm(letter ~., data = letters_train, kernel = "tanhdot")
+#make our predictions
+letter_predictions_tanhdot <- predict(letter_classifier_tanhdot, letters_test)
+#check the accuracy using polydot. Accuracy of 8%. Yikes!
+agreement_tanhdot <- letter_predictions_tanhdot == letters_test$letter
+table(agreement_tanhdot)
+prop.table(table(agreement_tanhdot))
+#let's try with a different kernel. Let's try laplacedot. Laplacian kernel.
+letter_classifier_laplacedot <- ksvm(letter ~., data = letters_train, kernel = "laplacedot")
+#make our predictions
+letter_predictions_laplacedot <- predict(letter_classifier_laplacedot, letters_test)
+#check the accuracy using laplacedot. Accuracy of 89%.
+agreement_laplacedot <- letter_predictions_laplacedot == letters_test$letter
+table(agreement_laplacedot)
+prop.table(table(agreement_laplacedot))
+#let's try with a different kernel. Let's try besseldot. Bessel kernel.
+letter_classifier_besseldot <- ksvm(letter ~., data = letters_train, kernel = "besseldot")
+#make our predictions
+letter_predictions_besseldot <- predict(letter_classifier_besseldot, letters_test)
+#check the accuracy using laplacedot. Accuracy of 89%.
+agreement_besseldot <- letter_predictions_besseldot == letters_test$letter
+table(agreement_besseldot)
+prop.table(table(agreement_besseldot))
